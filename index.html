@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertir YouTube a MP3</title>
+</head>
+<body>
+    <h1>Convertir YouTube a MP3</h1>
+    <form id="urlForm">
+        <label for="url">URL de YouTube:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Convertir</button>
+    </form>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const url = document.getElementById('url').value;
+
+            const response = await fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url })
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'video.mp3';
+                link.click();
+            } else {
+                alert('Hubo un error con la descarga');
+            }
+        });
+    </script>
+</body>
+</html>
